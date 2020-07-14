@@ -1,0 +1,48 @@
+cmake_minimum_required(VERSION 2.8.9)
+set(CMAKE_BUILD_TYPE Release)
+# Util
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${LDLIBPATHFLAGS}")
+
+set (PROJECT_LINK_LIBS shrfox )
+set (PROJ_LIST "hd;cedit;Table;wsdump;zdi;bumpforms;zdat;zdr;zque;shmdump;dumpdbx")
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${OPEN_FOX_UTL_DIR}/${PROJ}.c )
+	add_dependencies(${PROJ} ${PROJECT_LINK_LIBS})
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS} )
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_UTL_DIR})
+endforeach()
+
+set (PROJECT_LINK_LIBS shrfox shrxml)
+set (PROJ_LIST "liconfig")
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${OPEN_FOX_UTL_DIR}/${PROJ}.c )
+	add_dependencies(${PROJ} ${PROJECT_LINK_LIBS})
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS} -lpthread)
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_UTL_DIR})
+endforeach()
+
+
+##  Config utilities
+set (PROJECT_LINK_LIBS  shrfox  )
+set (PROJ_LIST "zs;zm;zp")
+foreach (PROJ ${PROJ_LIST})
+	project(${PROJ})
+	add_executable(${PROJ} ${OPEN_FOX_CFG_DIR}/${PROJ}.c )
+	add_dependencies(${PROJ} ${PROJECT_LINK_LIBS})
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS} )
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_CFG_DIR})
+endforeach()
+
+#  Couldn't find any of these source files....
+#set (PROJECT_LINK_LIBS libshrfox.so libshrxml.so libshrtoken.so libshrfips140.so)
+#set (PROJ_LIST "ImportTokens;UnlockToken;ResyncToken;TokenDoctor;UpgradeTokenFiles")
+#foreach (PROJ ${PROJ_LIST})
+#       project(${PROJ})
+#	add_executable(${PROJ} ${OPEN_FOX_UTL_DIR}/${PROJ}.c )
+#	add_dependencies(${PROJ} ${PROJECT_LINK_LIBS})
+#	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS} -lpthread -ldl)
+#	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_UTL_DIR})
+#endforeach()
+

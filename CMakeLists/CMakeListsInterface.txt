@@ -1,0 +1,98 @@
+#  Interfaces
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${LDLIBPATHFLAGS} ")
+
+#For the static library:
+
+
+#set (PROJ_LIST "DMXSRV;BAILIF;NCITCP;OVIP;REMSRV")
+#foreach (PROJ ${PROJ_LIST})
+#        project(${PROJ})
+#	add_executable(${PROJ} ${PROJ}.c )
+#	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS})
+#	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+#endforeach()
+
+#project(NLTTCP)  
+#	add_executable(NLTTCP NLTTCP.c ${OPEN_FOX_INC_DIR}/foxbase64.c )
+#	target_link_libraries(NLTTCP LINK_PUBLIC ${PROJECT_LINK_LIBS})
+#	install(TARGETS NLTTCP DESTINATION ${OPEN_FOX_BIN_DIR})
+
+#set (PROJECT_LINK_LIBS  )  
+#set (PROJ_LIST "BMVIF;MMMPIF;PORIF;WARIF")
+#foreach (PROJ ${PROJ_LIST})
+#        project(${PROJ})
+#	add_executable(${PROJ} ${PROJ}.c)
+#	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS} shrfox shrxml)
+#	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+#endforeach()
+
+#add p threading libs
+if (";ACCOUNT;" MATCHES ";${FN};" )
+	set (PROJ_LIST "DMXSRV;ARCLDR")
+else()
+	set (PROJ_LIST "ARCLDR")
+endif()
+  
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${PROJ}.c)
+	add_dependencies(${PROJ} shrfox )
+	target_link_libraries(${PROJ} LINK_PUBLIC  shrfox)
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+set (PROJ_LIST "LICSRV;CCWIF")  
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${PROJ}.c)
+	add_dependencies(${PROJ} shrfox shrxml )
+	target_link_libraries(${PROJ} LINK_PUBLIC  shrfox shrxml pthread)
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+
+#set (PROJ_LIST "CCHIF;FTREMO")
+set (PROJ_LIST "CCHIF;FXTCLI")
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${PROJ}.c)
+	target_link_libraries(${PROJ} LINK_PUBLIC   shrfox shrxml pthread dl)
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+
+set (PROJ_LIST "FXTINT")
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${PROJ}.c)
+	target_link_libraries(${PROJ} LINK_PUBLIC  shrfox shrxml crypto ssl pthread dl)
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+set (PROJ_LIST "FXTALK")
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${PROJ}.c)
+	add_dependencies(${PROJ} shrfox shrxml shrfips140 )
+	target_link_libraries(${PROJ} LINK_PUBLIC shrfox shrxml shrfips140 cryptocme_fips140 dl)
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+
+######     ORACLE INTERFACES     ####
+include_directories(${ORACLE_DIR}/include)
+link_directories(${ORACLE_DIR}/lib)
+#Message(STATUS "The Oracle lib dir: "  ${ORACLE_DIR}/lib)
+
+if (";ACCOUNT;" MATCHES ";${FN};" )
+	set (PROJ_LIST ARCDB1;ARCDB2;CHS)
+else()
+	set (PROJ_LIST )
+endif()
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${PROJ}.c)
+	target_link_libraries(${PROJ} LINK_PUBLIC  shrfox  clntsh )
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()

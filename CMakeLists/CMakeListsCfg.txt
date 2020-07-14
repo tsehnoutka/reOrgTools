@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 2.8.9)
+set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${LDLIBPATHFLAGS} " )
+
+link_directories(${OPEN_FOX_OBJ_DIR} )
+set ( PROJECT_LINK_LIBS  shrfox shrxml  )
+
+project(cfs)
+add_executable(cfs cfs.c)
+add_dependencies(cfs ${PROJECT_LINK_LIBS})
+target_link_libraries(cfs ${PROJECT_LINK_LIBS} pthread crypt)
+install(TARGETS cfs DESTINATION ${OPEN_FOX_BIN_DIR})
+
+
+project(CFG)
+include_directories("/usr/include/libxml2")
+file (GLOB CFG_SRC "${CFG_DIR}/CFG_files/*.c" "${OPEN_FOX_INC_DIR}/foxbase64.c")
+add_executable(CFG ${CFG_SRC})
+add_dependencies(CFG ${PROJECT_LINK_LIBS})
+target_link_libraries(CFG ${PROJECT_LINK_LIBS} pthread z)
+install(TARGETS CFG DESTINATION ${OPEN_FOX_BIN_DIR})

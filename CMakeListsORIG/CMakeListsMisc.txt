@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 2.8.9)
+
+# build other programs
+set (PROJECT_LINK_LIBS shrfox)
+set (PROJ_LIST "watchdog;iplfox;foxcreate;foxsizes") 
+foreach (PROJ ${PROJ_LIST})
+	project(${PROJ})
+	add_executable(${PROJ} ${CERT_FOX_INC_DIR}/MISC/${PROJ}.c )
+	add_dependencies(${PROJ} ${PROJECT_LINK_LIBS})
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS} )
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()

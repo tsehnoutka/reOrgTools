@@ -1,0 +1,40 @@
+# tools / utl
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${LDLIBPATHFLAGS}")
+
+set (PROJECT_LINK_LIBS shrfox )
+set (PROJ_LIST "cedit;wsdump;zdi;bumpforms;zdat;zdr;zque;shmdump;dumpdbx;st;makeconfigs;ssmtest;zckpt")  #Table
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${PROJ}.c )
+	add_dependencies(${PROJ} ${PROJECT_LINK_LIBS})
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS} )
+	install(TARGETS ${PROJ} DESTINATION ${ROOT_DIR}/osbi/utl)
+endforeach()
+
+project(hd)
+add_executable(hd hd.c )
+add_dependencies(hd ${PROJECT_LINK_LIBS})
+STRING(REPLACE "-O3" "-O0" CMAKE_C_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
+target_link_libraries(hd LINK_PUBLIC ${PROJECT_LINK_LIBS} )
+install(TARGETS hd DESTINATION ${ROOT_DIR}/osbi/utl)
+
+set (PROJECT_LINK_LIBS shrfox shrxml)
+project(csvUsers)
+add_executable(csvUsers csvUsers.c ${OPEN_FOX_INC_DIR}/foxbase64.c)
+add_dependencies(csvUsers ${PROJECT_LINK_LIBS})
+target_link_libraries(csvUsers LINK_PUBLIC ${PROJECT_LINK_LIBS} -lpthread)
+install(TARGETS csvUsers DESTINATION ${ROOT_DIR}/osbi/utl)
+
+set (PROJ_LIST "liconfig")
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${PROJ}.c )
+	add_dependencies(${PROJ} ${PROJECT_LINK_LIBS})
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS} -lpthread)
+	#set_property(TARGET ${PROJ} PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)  this gets rid of the "Set runtime path od *binary* to ""
+	install(TARGETS ${PROJ} DESTINATION ${ROOT_DIR}/osbi/utl)
+endforeach()
+
+
+

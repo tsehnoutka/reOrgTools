@@ -1,0 +1,41 @@
+# /WST/src/file.c file.c
+
+#FILE_LIST is a list of certified file names.  This list will need to be 
+#verified occasionally.
+#last verfied 2/12/14
+FILE_LIST="ALERTS.c CP.c D1.c ED.c HP.c INTSRV.c IP.c JQ.c JT.c JW.c JX.c LPROTOTYPES.h Mfox.h OAMON.c OASSM.c OASTAT.c OAinterface.c OP.c OR.c PS.c RC.c RK.c SM.c TI.c TISPCL.c TR.c foxsizes.c iplfox.c watchdog.c fox.h"
+echo "This script will copy the certified files from /WST/src
+Is this what you want to do (y/n)?"
+read ANSWER
+echo "ANSWER:$ANSWER"
+
+if [ $ANSWER = y ]; then
+  echo "Processing CERTIFY files, library files, and fox.h starts now"
+
+  for i in $FILE_LIST
+  do
+      echo "Processing $i"
+      cp -p /WST/src/$i $i
+  done
+else 
+  echo "No processing done!!!"
+fi
+echo "Processing L[a-z]*.c"
+cp -p /WST/src/L[a-z]*.c .
+echo "Getting the help files"
+cd ..
+mkdir help
+cd help
+cp /WST/help/* .
+echo "Getting the utl files"
+mkdir ../utl
+cd ../utl
+cp -p /WST/utl/zslots.c zslots.c
+cp -p /WST/utl/zque.c zque.c
+cp -p /WST/utl/dumpdbx.c dumpdbx.c
+cp -p /WST/utl/hd.c hd.c
+cp -p /WST/utl/zdat.c zdat.c
+cp -p /WST/utl/zdr.c zdr.c
+cp -p /WST/utl/shmdump.c shmdump.c
+cp -p /WST/utl/zckpt.c zckpt.c
+echo "GET THE PROPER foxdisk.h FILE!!!!!"

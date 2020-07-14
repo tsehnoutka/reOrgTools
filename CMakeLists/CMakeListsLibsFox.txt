@@ -1,0 +1,8 @@
+# shrfox
+
+
+file(GLOB SOURCES "*.c")
+add_library(shrfox SHARED ${SOURCES})
+target_include_directories (shrfox PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+install(TARGETS shrfox LIBRARY DESTINATION ${OPEN_FOX_BIN_DIR})
+

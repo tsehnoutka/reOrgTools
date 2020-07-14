@@ -1,0 +1,128 @@
+
+
+###############################################################################
+###############################################################################
+#
+#     			CORE 
+#
+###############################################################################
+###############################################################################
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${LDLIBPATHFLAGS}")
+
+set (PROJECT_LINK_LIBS shrfox shrxml )
+project(TP;)  
+	add_executable(TP TP.c edit.c editspcl.c  )
+	target_link_libraries(TP LINK_PUBLIC ${PROJECT_LINK_LIBS} -lpthread)
+	add_dependencies(TP ${PROJECT_LINK_LIBS})
+	install(TARGETS TP DESTINATION ${OPEN_FOX_BIN_DIR})
+# need to figure out how to make a copy and rename it to "TP1.  Maybe this can be done in the install script
+
+###############################################################################
+#     			CERTIFIED CORE FILES
+###############################################################################
+set ( PROJECT_LINK_LIBS shrfox )
+project(IP)
+	add_executable(IP ${COMM_SRC_DIR}/switch/IP.c )
+	add_dependencies(IP ${PROJECT_LINK_LIBS})
+	target_link_libraries(IP LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS IP DESTINATION ${OPEN_FOX_BIN_DIR})
+
+project(OP)
+	add_executable(OP ${COMM_SRC_DIR}/switch/OP.c OPSPCL.c)
+	add_dependencies(OP ${PROJECT_LINK_LIBS})
+	target_link_libraries(OP LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS OP DESTINATION ${OPEN_FOX_BIN_DIR})
+
+
+###############################################################################
+###############################################################################
+#
+#     			APPL 
+#
+###############################################################################
+###############################################################################
+
+project(JX)
+add_executable(JX JX.c JXSPCL.c ${OPEN_FOX_INC_DIR}/foxbase64.c)
+add_dependencies(JX ${PROJECT_LINK_LIBS})
+target_link_libraries(JX LINK_PUBLIC ${PROJECT_LINK_LIBS})
+install(TARGETS JX DESTINATION ${OPEN_FOX_BIN_DIR})
+
+
+set (PROJ_LIST "RL;RP;tcpman")
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${PROJ}.c)
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS} )
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+set (PROJECT_LINK_LIBS shrfox shrxml)
+project(FM)
+add_executable(FM FM.c FMSPCL.c)
+add_dependencies(FM ${PROJECT_LINK_LIBS})
+target_link_libraries(FM LINK_PUBLIC ${PROJECT_LINK_LIBS} -lpthread -ldl)
+install(TARGETS FM DESTINATION ${OPEN_FOX_BIN_DIR})
+
+project(RS)
+add_executable(RS RS.c RSspcl.c RptCfgInfo.c)
+add_dependencies(RS ${PROJECT_LINK_LIBS})
+target_link_libraries(RS LINK_PUBLIC ${PROJECT_LINK_LIBS} -lpthread -ldl)
+install(TARGETS RS DESTINATION ${OPEN_FOX_BIN_DIR})
+
+project(RU)
+add_executable(RU RU.c RptCfgInfo.c)
+add_dependencies(RU ${PROJECT_LINK_LIBS})
+target_link_libraries(RU LINK_PUBLIC ${PROJECT_LINK_LIBS} -lpthread -ldl)
+install(TARGETS RU DESTINATION ${OPEN_FOX_BIN_DIR})
+
+if (";ACCOUNT;" MATCHES ";${FN};" )
+	set (PROJ_LIST "VA;UM")
+else()
+	set (PROJ_LIST "VA")
+endif()
+foreach (PROJ ${PROJ_LIST})
+add_executable(${PROJ} ${PROJ}.c )
+add_dependencies(${PROJ} ${PROJECT_LINK_LIBS})
+target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS} -lpthread -ldl)
+install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+
+# adding cryptology libraries
+set (PROJECT_LINK_LIBS shrfox shrxml shrtoken shrfips140 cryptocme_fips140  )
+set (PROJ_LIST "US")
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${PROJ}.c)
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS} -lpthread -ldl)
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+###############################################################################
+#     			CERTIFIED APPL FILES
+###############################################################################
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${LDLIBPATHFLAGS} -lpthread")
+set (PROJECT_LINK_LIBS shrfox shrxml)
+project(TI)
+	add_executable(TI ${COMM_SRC_DIR}/switch/TI.c TISPCL.c )
+	target_link_libraries(TI LINK_PUBLIC ${PROJECT_LINK_LIBS} )
+	install(TARGETS TI DESTINATION ${OPEN_FOX_BIN_DIR})
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${LDLIBPATHFLAGS}")
+set ( PROJECT_LINK_LIBS shrfox )
+STRING(REPLACE "-O3" "-O0" CMAKE_C_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
+set (PROJ_LIST "ALERTS;CP;D1;ED;HP;JQ;JT;JW;OR;PS;RK;SM;TR;RC")
+# Need to rememeber to make 3 copies of HP, JQ, OR, TR
+foreach (PROJ ${PROJ_LIST})
+	project(${PROJ})
+	add_executable(${PROJ} ${COMM_SRC_DIR}/switch/${PROJ}.c )
+	add_dependencies(${PROJ} ${PROJECT_LINK_LIBS})
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+#INTSRV;  Compile error - Can't find APPLINTSRV declaration 
+
+
+
+

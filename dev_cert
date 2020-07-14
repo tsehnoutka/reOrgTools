@@ -1,0 +1,53 @@
+# /DEV/src/file.c file.c
+
+#FILE_LIST is a list of certified file names.  This list will need to be 
+#verified occasionally.
+#last verfied 2/12/14
+FILE_LIST="ALERTS.c CP.c D1.c ED.c HP.c INTSRV.c IP.c JQ.c JT.c JW.c JX.c LPROTOTYPES.h Mfox.h OAMON.c OASSM.c OASTAT.c OAinterface.c OP.c OR.c PS.c RC.c RK.c SM.c TI.c TR.c foxsizes.c iplfox.c watchdog.c fox.h"
+echo "This script will copy the certified files from /DEV/src
+Is this what you want to do (y/n)?"
+read ANSWER
+echo "ANSWER:$ANSWER"
+
+if [ $ANSWER = y ]; then
+  echo "Processing CERTIFY files, library files, and fox.h starts now"
+
+  for i in $FILE_LIST
+  do
+      echo "Processing $i"
+      cp -p /DEV/src/$i $i
+  done
+else 
+  echo "No processing done!!!"
+fi
+echo "Processing L[a-z]*.c"
+cp -p /DEV/src/L[a-z]*.c .
+echo "Processing RS.c, RU.c, RptCfgInfo.[ch] and et al"
+cp -p /DEV/src/RS.c .
+cp -p /DEV/src/RU.c .
+cp -p /DEV/src/RptCfgInfo.c .
+cp -p /DEV/src/RptCfgInfo.h .
+cp -p /DEV/src/OAerrors.c .
+cp -p /DEV/src/foxmon.c .
+cp -p /DEV/src/trace_proc.c .
+cp -p /DEV/src/trace.c .
+cp -p /DEV/src/trace.h .
+cp -p /DEV/src/RL.c .
+cp -p /DEV/src/RP.c .
+cp -p /DEV/src/OAnet.h .
+cp -p /DEV/src/OAconnections.h .
+echo "Getting the help files"
+cd ../help
+cp /DEV/help/* .
+echo "Getting the utl files"
+cd ../utl
+cp -p /DEV/utl/zslots.c zslots.c
+cp -p /DEV/utl/zque.c zque.c
+cp -p /DEV/utl/dumpdbx.c dumpdbx.c
+cp -p /DEV/utl/hd.c hd.c
+cp -p /DEV/utl/zdat.c zdat.c
+cp -p /DEV/utl/zdr.c zdr.c
+cp -p /DEV/utl/shmdump.c shmdump.c
+cp -p /DEV/utl/zpatch.c zpatch.c
+cp -p /DEV/utl/zckpt.c zckpt.c
+cp -p /DEV/utl/zsizing.c zsizing.c

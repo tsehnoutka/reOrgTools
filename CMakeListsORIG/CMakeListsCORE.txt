@@ -1,0 +1,32 @@
+cmake_minimum_required(VERSION 2.8.9)
+set(CMAKE_BUILD_TYPE Release)
+# switch - CORE
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${LDLIBPATHFLAGS}")
+
+set (PROJECT_LINK_LIBS shrfox shrxml shrxmlSPCL)
+project(TP;)  
+	add_executable(TP TP.c TP.c edit.c editspcl.c ../../interfaces/AOCfunc.c )
+	target_link_libraries(TP LINK_PUBLIC ${PROJECT_LINK_LIBS} -lpthread)
+	add_dependencies(TP ${PROJECT_LINK_LIBS})
+	install(TARGETS TP DESTINATION ${OPEN_FOX_BIN_DIR})
+# need to figure out how to make a copy and rename it to "TP1.  Maybe this can be done in the install script
+
+###############################################################################
+###############################################################################
+#
+#     			CERTIFIED FILES
+#
+###############################################################################
+###############################################################################
+set ( PROJECT_LINK_LIBS shrfox )
+project(IP)
+	add_executable(IP ${CERT_FOX_INC_DIR}/CORE/IP.c )
+	add_dependencies(IP ${PROJECT_LINK_LIBS})
+	target_link_libraries(IP LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS IP DESTINATION ${OPEN_FOX_BIN_DIR})
+
+project(OP)
+	add_executable(OP ${CERT_FOX_INC_DIR}/CORE/OP.c OPSPCL.c)
+	add_dependencies(OP ${PROJECT_LINK_LIBS})
+	target_link_libraries(OP LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS OP DESTINATION ${OPEN_FOX_BIN_DIR})

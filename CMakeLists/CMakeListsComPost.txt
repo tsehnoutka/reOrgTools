@@ -1,0 +1,10 @@
+# for testing purposess
+#MESSAGE (STATUS "Common Source dir is: " ${COMM_SRC_DIR})
+#MESSAGE (STATUS "The Open fox bin dir is: " ${OPEN_FOX_BIN_DIR}) 
+#install (CODE  "execute_process(COMMAND touch ${COMM_SRC_DIR}/AAA.txt)")
+
+# make copies of the nessary executables
+install (CODE  "execute_process(COMMAND ${COMM_SRC_DIR}/copyExe.sh ${OPEN_FOX_BIN_DIR} > ${COMM_SRC_DIR}/results.txt)")
+
+
+

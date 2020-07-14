@@ -1,0 +1,69 @@
+cmake_minimum_required(VERSION 2.8.9)
+set(CMAKE_BUILD_TYPE Release)
+# switch - AAPL
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${LDLIBPATHFLAGS}")
+
+set (PROJECT_LINK_LIBS shrfox)
+set (PROJ_LIST "JJ;RL;RP;RS")
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${PROJ}.c )
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+set (PROJECT_LINK_LIBS shrfox shrxml)
+project(FM;)  
+	add_executable(FM FM.c FMSPCL.c )
+	target_link_libraries(FM LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS FM DESTINATION ${OPEN_FOX_BIN_DIR})
+
+set (PROJ_LIST "RU;VA")
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${PROJ}.c )
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${LDLIBPATHFLAGS} -lpthread")
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+
+# adding cryptology libraries
+set (PROJECT_LINK_LIBS shrfox shrxml shrtoken shrfips140 cryptocme_fips140  )
+set (PROJ_LIST "US")
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${PROJ}.c)
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS} -lpthread -ldl)
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+###############################################################################
+###############################################################################
+#
+#     			CERTIFIED FILES
+#
+###############################################################################
+###############################################################################
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${LDLIBPATHFLAGS} -lpthread")
+set (PROJECT_LINK_LIBS shrfox shrxml)
+project(TI)
+	add_executable(TI ${CERT_FOX_INC_DIR}/APPL/TI.c TISPCL.c )
+	target_link_libraries(TI LINK_PUBLIC ${PROJECT_LINK_LIBS} )
+	install(TARGETS TI DESTINATION ${OPEN_FOX_BIN_DIR})
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${LDLIBPATHFLAGS}")
+set ( PROJECT_LINK_LIBS shrfox )
+STRING(REPLACE "-O3" "-O0" CMAKE_C_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
+set (PROJ_LIST "ALERTS;CP;D1;ED;HP;JQ;JT;JW;OR;PS;RK;SM;TR;RC")
+# Need to rememeber to make 3 copies of HP, JQ, OR, TR
+foreach (PROJ ${PROJ_LIST})
+	project(${PROJ})
+	add_executable(${PROJ} ${CERT_FOX_INC_DIR}/APPL/${PROJ}.c )
+	add_dependencies(${PROJ} ${PROJECT_LINK_LIBS})
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+#INTSRV;  Compile error - Can't find APPLINTSRV declaration 
+
+

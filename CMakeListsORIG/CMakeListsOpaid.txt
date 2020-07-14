@@ -1,0 +1,83 @@
+cmake_minimum_required(VERSION 2.8.9)
+set(CMAKE_BUILD_TYPE Release)
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${LDLIBPATHFLAGS} ")
+
+STRING(REPLACE "-O3" "-O0" CMAKE_C_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
+# I need the above line to remove optimization.
+# with out that line I get the following error:
+#  Building C object /CMakeFiles/common.dir/common.c.o
+#  In file included from /usr/include/features.h:375:0,
+#                 from /usr/include/sys/poll.h:22,
+#                 from /usr/include/poll.h:1,
+#                 from /home/user/workspace/program/src/common.c:26:
+#  /usr/include/sys/stat.h:503:1: error: conflicting types for ‘stat64’
+#  __NTH (stat64 (const char *__path, struct stat64 *__statbuf))
+#  ^
+#  In file included from /home/user/workspace/program/src/../../includes/fxgen.h:205:0,
+#                 from /home/user/workspace/program/src/../../includes/fx.h:286,
+#                 from /home/user/workspace/program/src/common.c:39:
+#  /usr/include/sys/stat.h:229:12: note: previous declaration of ‘stat64’ was here
+#  extern int stat64 (const char *__restrict __file,
+
+
+#For the static library:
+set ( PROJECT_LINK_LIBS shrfox )
+set (PROJ_LIST "COMMON;FLOGMON;FOXCMDS;FOXMON;OABACKUP;SYSMON")
+
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} OAhelper.c ${PROJ}.c )
+	add_dependencies(${PROJ} shrfox)
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+
+project (OPAID)
+	add_executable(OPAID OAconnections.c OAencryption.c OAerrors.c OAfox.c OAinterface.c OAmain.c OAnet.c OAwrappers.c )
+	target_link_libraries(OPAID LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS OPAID DESTINATION ${OPEN_FOX_BIN_DIR})
+
+project (OATRACE)
+	add_executable(OATRACE trace.c trace_proc.c OAhelper.c)
+	target_link_libraries(OATRACE LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS OATRACE DESTINATION ${OPEN_FOX_BIN_DIR})
+
+project (WRS)
+	add_executable(WRS WRS.c OAhelper.c)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -lpthread")
+	add_dependencies(${PROJ} shrfox shrxml)
+	set ( PROJECT_LINK_LIBS shrfox shrxml)
+	target_link_libraries(WRS LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS WRS DESTINATION ${OPEN_FOX_BIN_DIR})
+
+
+###############################################################################
+###############################################################################
+#
+#     			CERTIFIED FILES
+#
+###############################################################################
+###############################################################################
+
+set ( PROJECT_LINK_LIBS shrfox )
+ 
+set (PROJ_LIST "OASSM;")
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ}  ${CERT_FOX_INC_DIR}/opaid/${PROJ}.c OAhelper.c)
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+set (PROJ_LIST "OAMON;OASTAT")
+foreach (PROJ ${PROJ_LIST})
+	project (${PROJ})
+	add_executable(${PROJ} ${CERT_FOX_INC_DIR}/opaid/${PROJ}.c )
+	add_dependencies(${PROJ} shrfox)
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+

@@ -1,0 +1,18 @@
+cmake_minimum_required(VERSION 2.8.9)
+set(CMAKE_BUILD_TYPE Release)
+
+project(shrxml)
+	include_directories("/usr/include")
+	include_directories("/usr/include/libxml2")
+	set(LIB_1 "/usr/lib/libxslt.so.1")
+	set(LIB_2 "/usr/lib/libxml2.so.2")
+
+	add_library(shrxml SHARED XML.c utils.c)
+	target_link_libraries (shrxml ${LIB_1} ${LIB_2}) 
+	install(TARGETS shrxml LIBRARY DESTINATION ${OPEN_FOX_BIN_DIR})
+
+project(shrxmlSPCL)
+	add_library(shrxmlSPCL SHARED XMLSPCL.c)
+	add_dependencies(shrxmlSPCL shrxml)
+	target_link_libraries(shrxmlSPCL LINK_PUBLIC shrxml)
+	install(TARGETS shrxmlSPCL LIBRARY DESTINATION ${OPEN_FOX_BIN_DIR})

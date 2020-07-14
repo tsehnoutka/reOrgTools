@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 2.8.9)
+project(shrtoken)
+set(CMAKE_BUILD_TYPE Release)
+
+file(GLOB SOURCES "*.c")
+link_directories(${RSA_LIB_DIR})
+add_library(shrtoken SHARED ${SOURCES})
+target_include_directories (shrtoken PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+install(TARGETS shrtoken LIBRARY DESTINATION ${OPEN_FOX_BIN_DIR})
+

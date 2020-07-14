@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 2.8.9)
+set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${LDLIBPATHFLAGS} -lpthread -lcrypt" )
+
+link_directories(${OPEN_FOX_OBJ_DIR} )
+set ( PROJECT_LINK_LIBS  shrfox shrxml )
+
+project(cfs)
+	add_executable(cfs cfs.c)
+	add_dependencies(cfs ${PROJECT_LINK_LIBS})
+	target_link_libraries(cfs ${PROJECT_LINK_LIBS} )
+	install(TARGETS cfs DESTINATION ${OPEN_FOX_BIN_DIR})
+

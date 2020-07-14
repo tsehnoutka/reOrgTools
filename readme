@@ -1,0 +1,8 @@
+This Python script searches through the Makefile and keeps the source code needed to build the fox in teh src directory.  Everything else goes to NotUsed dir.  kee this dir around until you are sure it builds.  There are some file needed that are not in the makefile.
+
+The scripts and other files in the repo are used to copy the files into the correct directory when the code gets organized.
+
+
+
+
+

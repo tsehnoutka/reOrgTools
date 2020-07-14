@@ -1,0 +1,74 @@
+cmake_minimum_required(VERSION 2.8.9)
+set(CMAKE_BUILD_TYPE Release)
+#  Interfaces
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${LDLIBPATHFLAGS} ")
+
+
+#For the static library:
+set (PROJECT_LINK_LIBS shrfox )
+set (PROJ_LIST "DMXSRV;BAILIF;NCITCP;OVIP;REMSRV")
+
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${PROJ}.c )
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+project(NLTTCP)  
+	add_executable(NLTTCP NLTTCP.c ${OPEN_FOX_INC_DIR}/foxbase64.c )
+	target_link_libraries(NLTTCP LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS NLTTCP DESTINATION ${OPEN_FOX_BIN_DIR})
+
+
+######     NEEDS OCI     ####
+#project(CHRI;EWA;AOC;HFS;HFSN;VLD)
+#	add_executable(CHRI CHRI.c CHRI_SQL.c)
+#	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ")
+#	target_link_libraries(CHRI LINK_PUBLIC ${PROJECT_LINK_LIBS})
+#	install(TARGETS CHRI DESTINATION ${OPEN_FOX_BIN_DIR})
+
+# add shrxml
+set (PROJECT_LINK_LIBS shrfox shrxml )  
+set (PROJ_LIST "BMVIF;MMMPIF;PORIF;WARIF")
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${PROJ}.c)
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+#add p threading libs
+set (PROJ_LIST "LICSRV")  
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${PROJ}.c)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -lpthread")
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+#adding dl lib
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -lpthread -ldl")
+set (PROJ_LIST "CCHIF;FTREMO")
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${PROJ}.c)
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+# adding cryptology libraries
+set (PROJECT_LINK_LIBS shrfox shrxml shrfips140 cryptocme_fips140 )
+set (PROJ_LIST "FXTALK")
+foreach (PROJ ${PROJ_LIST})
+        project(${PROJ})
+	add_executable(${PROJ} ${PROJ}.c)
+	add_dependencies(${PROJ} shrfox shrxml shrfips140 )
+	target_link_libraries(${PROJ} LINK_PUBLIC ${PROJECT_LINK_LIBS})
+	install(TARGETS ${PROJ} DESTINATION ${OPEN_FOX_BIN_DIR})
+endforeach()
+
+
+
